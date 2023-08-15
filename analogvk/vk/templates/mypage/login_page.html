@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} Моя страница {% endblock %}</title>
+</head>
+<body>
+    <div>
+        <a href = '{% url "login_page" log_id %}'>Моя страница</a>
+        <a href = '{% url "news_list" log_id %}'>Новости</a>
+        <a href = '{% url "main" %}'>Выйти</a><hr>
+    </div>
+    <div>
+        {% block content %}
+            {{ data.name }}<br>
+            {{ data.city }}<br>
+            {{ data.date_of_birth }}<br>
+            {{ data.login_in.user_login }}  {{ data.email }}<br>
+        {% endblock %}
+    </div>
+</body>
+</html>
+
+
+
+

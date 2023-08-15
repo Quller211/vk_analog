@@ -1,0 +1,11 @@
+{% extends 'mypage/login_page.html' %}
+
+{% block title %} {{ content.topic_news }} {% endblock %}
+
+{% block content %}
+    {{ content.topic_news }}<br>
+    {{ content.post_news }}<br>
+    <img src = '{{ content.topic_images.url }}'>><br>
+    {{ content.posted_time }}<br>
+    {{ content.posted_by_user_login }}<br>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'mypage/login_page.html' %}
+
+{% block title %} Добавить новость {% endblock %}
+
+{% block content %}
+    <form method = 'post' enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_ul }}
+        <p><input type = "submit" value = 'Добавить новость'></input></p>
+    </form>
+{% endblock %}
