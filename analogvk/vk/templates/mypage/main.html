@@ -11,7 +11,8 @@
         <form method = "post">
             {% csrf_token %}
             {{ form.as_p }}
-            <p><input type = "submit" value = 'Войти'></input></p>
+            <p><input type = "submit" value = 'Войти'></input> <a href = '{% url "registr_page" %}'>Зарегистрироваться</a></p>
+            
         </form>
         {{ message }}
         {% endblock %}

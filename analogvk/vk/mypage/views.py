@@ -2,29 +2,64 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from datetime import *
-from .models import Login, MainPage, News
-from .forms import MainPageForm, MainLoginForm, AddNewsForm
+from django.contrib.auth import authenticate, login
+from .models import News
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+from .forms import AddNewsForm, LoginForm, RegistrationForm
 
+# def main(request):
+#     # Вход в аккаунт
+#     if request.method == 'POST':
+#         form = MainLoginForm(request.POST)
+#         if form.is_valid():
+#             # Если пользователь есть, переходит на страницу
+#             if Login.objects.filter(user_login = form.cleaned_data['user_login']).exists():
+#                 log_id = Login.objects.get(user_login = form.cleaned_data['user_login']).id
+#                 return HttpResponseRedirect(reverse('login_page', args = [log_id]))
+#             else:
+#                 # Если нет, заносится в базу данных и переходит на страницу для добавления доп инфы
+#                 i = form.save()
+#                 log_id = i.id
+#                 return HttpResponseRedirect(reverse('mainpage', args = [log_id]))
+#     else:
+#         form = MainLoginForm()
+#     return render(request, 'mypage/main.html', {'form': form})
+
+# Страница авторизации
 def main(request):
-    # Вход в аккаунт
     if request.method == 'POST':
-        form = MainLoginForm(request.POST)
+        form = LoginForm(request.POST)
         if form.is_valid():
-            # Если пользователь есть, переходит на страницу
-            if Login.objects.filter(user_login = form.cleaned_data['user_login']).exists():
-                log_id = Login.objects.get(user_login = form.cleaned_data['user_login']).id
-                return HttpResponseRedirect(reverse('login_page', args = [log_id]))
+            cd = form.cleaned_data
+            user = authenticate(request, username = cd['username'], password = cd['password'])
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect(reverse('login_page', args = [user.id]))
             else:
-                # Если нет, заносится в базу данных и переходит на страницу для добавления доп инфы
-                i = form.save()
-                log_id = i.id
-                return HttpResponseRedirect(reverse('mainpage', args = [log_id]))
+                return HttpResponse('Нет')
     else:
-        form = MainLoginForm()
+        form = LoginForm()
     return render(request, 'mypage/main.html', {'form': form})
 
-def mainpage(request, log_id):
+# Страница регистрации
+def registr_page(request):
     if request.method == 'POST':
+        form1 = UserCreationForm(request.POST)
+        form2 = RegistrationForm(request.POST)
+        if form1.is_valid() and form2.is_valid():
+            k = form1.save()
+            i = form2.save(commit = False)
+            i.user_id = k.id
+            i.save()
+            return HttpResponseRedirect(reverse('main'))
+    else:
+        form1 = UserCreationForm()
+        form2 = RegistrationForm()
+    return render(request, 'mypage/registr_page.html', {'form1': form1, 'form2': form2})
+
+# def mainpage(request, log_id):
+    if request.method == 'OST':
         form = MainPageForm(request.POST)
         if form.is_valid():
             date_valid = form.cleaned_data['date_of_birth']
@@ -42,7 +77,7 @@ def mainpage(request, log_id):
     return render(request, 'mypage/mainpage.html', {'form': form, 'message': message})
 
 def login_page(request, log_id):
-    data = MainPage.objects.get(login_in_id = log_id)
+    data = User.objects.get(id = log_id)
     return render(request, 'mypage/login_page.html', {'data': data, 'log_id': log_id})
 
 def news_list(request, log_id):
