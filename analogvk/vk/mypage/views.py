@@ -3,8 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from datetime import *
 from django.contrib.auth import authenticate, login
-from .models import News
-from django.contrib.auth.models import User
+from .models import News, UserDescripe
 from django.contrib.auth.forms import UserCreationForm
 from .forms import AddNewsForm, LoginForm, RegistrationForm
 
@@ -37,7 +36,8 @@ def main(request):
                 login(request, user)
                 return HttpResponseRedirect(reverse('login_page', args = [user.id]))
             else:
-                return HttpResponse('Нет')
+                err_mess = 'Неправильный логин или пароль'
+                return render(request, 'mypage/main.html', {'form': form, 'err_mess': err_mess})
     else:
         form = LoginForm()
     return render(request, 'mypage/main.html', {'form': form})
@@ -77,8 +77,9 @@ def registr_page(request):
     return render(request, 'mypage/mainpage.html', {'form': form, 'message': message})
 
 def login_page(request, log_id):
-    data = User.objects.get(id = log_id)
-    return render(request, 'mypage/login_page.html', {'data': data, 'log_id': log_id})
+    data = UserDescripe.objects.get(user_id = log_id)
+    user_news = News.objects.filter(posted_by_id = log_id)
+    return render(request, 'mypage/login_page.html', {'data': data, 'log_id': log_id, 'user_news': user_news})
 
 def news_list(request, log_id):
     content = News.objects.filter(posted = True)[:5]

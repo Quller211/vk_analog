@@ -7,6 +7,7 @@
 {% csrf_token %}
     {{ form1.as_p }}
     {{ form2.as_p }}
-    <p><input type = 'submit' value = 'Зарегистрироваться'></p>
+    <p><input type = 'submit' value = 'Зарегистрироваться'>
+    <button><a style = "text-decoration: none;" href = "{% url 'main' %}">Назад</a></button></p>
 </form>
 {% endblock %}

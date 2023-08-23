@@ -7,7 +7,7 @@
     {{ n.topic_news }}<br>
     <img src = "{{ n.topic_images.url }}"><br>
     <p><a href = "{% url 'news_detail' log_id n.id %}">Посмотреть новость</a></p><br>
-    <p>Опубликовано: {{ n.posted_by.user_login }} || {{ n.posted_time }}</p><hr>
+    <p>Опубликовано: {{ n.posted_by.username }} || {{ n.posted_time }}</p><hr>
 {% endfor %}
 <p><a href = '{% url "add_news" log_id %}'>Добавить новость</a></p>
 {% endblock %}

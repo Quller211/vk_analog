@@ -9,13 +9,29 @@
     <div>
         <a href = '{% url "login_page" log_id %}'>Моя страница</a>
         <a href = '{% url "news_list" log_id %}'>Новости</a>
-        <a href = '{% url "main" %}'>Выйти</a><hr>
+        {% if request.user.is_authenticated %}
+            <a href = '{% url "main" %}'>Выйти</a>
+            <div style = 'text-align: right;'>{{ user.username }}</div><hr>
+        {% endif %}
     </div>
     <div>
         {% block content %}
-            {{ data.last_name }} {{ data.first_name }}<br>
-        {% endblock %}
+            {{ data.user.last_name }} {{ data.user.first_name }}<br>
+            {{ data.user.username }}<br>
+            {{ data.user.email }}<br>
+            {{ data.city }}<br>
+            {{ data.date_of_birth }}<br><hr>
     </div>
+    <div>
+        <p style = "text-decoration: underline;">Опубликованные новости:</p>
+        {% for n in user_news %}
+            {{ n.topic_news }}<br>
+            <img src = "{{ n.topic_images.url }}"><br>
+            <p><a href = "{% url 'news_detail' log_id n.id %}">Посмотреть новость</a></p><br>
+            <p>Опубликовано: {{ n.posted_by.username }} || {{ n.posted_time }}</p><hr>
+        {% endfor %}
+    </div>
+    {% endblock %}
 </body>
 </html>
 

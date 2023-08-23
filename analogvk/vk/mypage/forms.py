@@ -1,5 +1,4 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
 from .models import News, UserDescripe
 
 class AddNewsForm(forms.ModelForm):
@@ -14,4 +13,4 @@ class LoginForm(forms.Form):
 class RegistrationForm(forms.ModelForm):
     class Meta:
         model = UserDescripe
-        fields = ['date_of_birth']
+        fields = ['date_of_birth', 'city']
